@@ -5,4 +5,5 @@
     <string name="enter_password">Hey! The name moon has been claimed. Do you have the password?</string>
     <string name="its_me">Its me</string>
     <string name="pick_different_username">← Or pick a different name</string>
+    <string name="bad_password">Wrong password, try again</string>
 </resources>
