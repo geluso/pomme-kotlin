@@ -1,9 +1,18 @@
 package us.pomme
 
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Point
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
+import android.view.MotionEvent
+import android.view.View
+import android.view.View.OnTouchListener
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.bumptech.glide.Glide
@@ -26,6 +35,29 @@ class GameActivity : ComponentActivity() {
     fun setPlayerCard(imageViewId: Int, cardId: Int) {
         val card: ImageView = findViewById(imageViewId)
         Glide.with(this).load(cardId).into(card)
+
+        var xx = 0f
+        var yy = 0f
+        card.setOnTouchListener { view, ev ->
+            Log.i("POMME", "touch " + ev.action)
+            if (ev.action == MotionEvent.ACTION_UP) {
+                card.performClick()
+            } else if (ev.action == MotionEvent.ACTION_DOWN) {
+                xx = ev.x
+                yy = ev.y
+
+                var scroller: ScrollView = findViewById(R.id.player_cards_holder)
+            } else if (ev.action == MotionEvent.ACTION_MOVE) {
+                var dx = ev.x - xx
+                var dy = ev.y - yy
+
+                card.x = card.x + dx
+                card.y = card.y + dy
+
+                xx = ev.x
+                yy = ev.y
+            }
+            true
+        }
     }
 }
-
