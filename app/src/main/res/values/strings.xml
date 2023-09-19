@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name" translatable="false">Pomme</string>
+    <string name="enter_username">Enter your name to get started</string>
+    <string name="lets_play">Let\'s play</string>
+    <string name="enter_password">Hey! The name moon has been claimed. Do you have the password?</string>
+    <string name="its_me">Its me</string>
+    <string name="pick_different_username">← Or pick a different name</string>
+</resources>
