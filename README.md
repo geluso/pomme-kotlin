@@ -1,4 +1,4 @@
 # Pomme on Android
 
-![./login_screen.png](login screen)
-![./game_screen.png](game screen)
+![login screen](./login_screen.png)
+![game screen](./game_screen.png)
