@@ -25,6 +25,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.main_activity)
 
+        var skipLogin = true
         var isEnteringPassword = false
 
         var usernamePrompt = findViewById<TextView>(R.id.enter_username)
@@ -66,7 +67,7 @@ class MainActivity : ComponentActivity() {
                 var response = client.newCall(request).execute()
                 var text = response.body?.string() ?: ""
 
-                if (!text.contains(("error"))) {
+                if (skipLogin || !text.contains(("error"))) {
                     var intent = Intent(this, GameActivity::class.java)
                     startActivity(intent)
                 } else if (text.contains("error") && text.contains("bad_password")) {

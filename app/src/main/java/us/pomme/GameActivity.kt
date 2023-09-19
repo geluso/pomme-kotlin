@@ -36,11 +36,15 @@ class GameActivity : ComponentActivity() {
         val card: ImageView = findViewById(imageViewId)
         Glide.with(this).load(cardId).into(card)
 
+        var initialX = card.x
+
         var xx = 0f
         var yy = 0f
         card.setOnTouchListener { view, ev ->
             Log.i("POMME", "touch " + ev.action)
             if (ev.action == MotionEvent.ACTION_UP) {
+                card.x = initialX
+
                 card.performClick()
             } else if (ev.action == MotionEvent.ACTION_DOWN) {
                 xx = ev.x
@@ -51,8 +55,9 @@ class GameActivity : ComponentActivity() {
                 var dx = ev.x - xx
                 var dy = ev.y - yy
 
+                System.out.println("initial x:" + initialX + " x:" + card.x + " dx: " + dx)
                 card.x = card.x + dx
-                card.y = card.y + dy
+                //card.y = card.y + dy
 
                 xx = ev.x
                 yy = ev.y
