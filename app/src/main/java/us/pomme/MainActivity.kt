@@ -40,15 +40,7 @@ class MainActivity : ComponentActivity() {
             Toast.makeText(this@MainActivity, username, Toast.LENGTH_SHORT).show()
 
             Thread {
-                var client = OkHttpClient.Builder()
-                    .connectionSpecs(
-                        Arrays.asList(
-                            ConnectionSpec.MODERN_TLS,
-                            ConnectionSpec.COMPATIBLE_TLS,
-                            ConnectionSpec.CLEARTEXT
-                        )
-                    )
-                    .build()
+                var client = OkHttpClient.Builder().build()
                 var url = "https://pomme.us:32123/user/login"
 
                 var bodyBuilder = FormBody.Builder()

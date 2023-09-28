@@ -16,6 +16,12 @@ import android.widget.ScrollView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import com.bumptech.glide.Glide
+import okhttp3.FormBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONObject
+import java.math.BigInteger
+import java.security.MessageDigest
 
 class GameActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,13 +29,39 @@ class GameActivity : ComponentActivity() {
         setContentView(R.layout.game_activity)
 
         val mainCard: ImageView = findViewById(R.id.main_card)
-        Glide.with(this).load(R.drawable.ariel).into(mainCard)
+        //Glide.with(this).load(R.drawable.loading_apple).into(mainCard)
 
-        setPlayerCard(R.id.player_card_5, R.drawable.player1)
-        setPlayerCard(R.id.player_card_2, R.drawable.player2)
-        setPlayerCard(R.id.player_card_3, R.drawable.player3)
-        setPlayerCard(R.id.player_card_4, R.drawable.player4)
-        setPlayerCard(R.id.player_card_5, R.drawable.player5)
+        Thread {
+            var session = "86c6d965d07a7b4e3023f4dc65e31856318e309073c6e80d7d1cdef74f1d8b40"
+            var game = "bigapple"
+
+            var client = OkHttpClient.Builder().build()
+            var url = "https://pomme.us:32123/game/poll"
+
+            var bodyBuilder = FormBody.Builder()
+                .add("session", session)
+                .add("game", game)
+
+            var body = bodyBuilder.build()
+
+            var request = Request.Builder().url(url).post(body).build()
+            var response = client.newCall(request).execute()
+            var text = response.body?.string() ?: "error"
+
+            val obj = JSONObject(text)
+            var image = obj.getString("image")
+
+            runOnUiThread {
+                var imageUrl = "https://pomme.us/img/main/" + image
+                Glide.with(this).load(imageUrl).into(mainCard)
+
+                setPlayerCard(R.id.player_card_5, R.drawable.player1)
+                setPlayerCard(R.id.player_card_2, R.drawable.player2)
+                setPlayerCard(R.id.player_card_3, R.drawable.player3)
+                setPlayerCard(R.id.player_card_4, R.drawable.player4)
+                setPlayerCard(R.id.player_card_5, R.drawable.player5)
+            }
+        }.start()
     }
 
     fun setPlayerCard(imageViewId: Int, cardId: Int) {
