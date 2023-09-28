@@ -28,9 +28,11 @@ class GameActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.game_activity)
 
-        val mainCard: ImageView = findViewById(R.id.main_card)
-        //Glide.with(this).load(R.drawable.loading_apple).into(mainCard)
+        setJudgeCard()
+        setPlayerCards()
+    }
 
+    fun setJudgeCard() {
         Thread {
             var session = "86c6d965d07a7b4e3023f4dc65e31856318e309073c6e80d7d1cdef74f1d8b40"
             var game = "bigapple"
@@ -53,20 +55,55 @@ class GameActivity : ComponentActivity() {
 
             runOnUiThread {
                 var imageUrl = "https://pomme.us/img/main/" + image
+                val mainCard: ImageView = findViewById(R.id.main_card)
                 Glide.with(this).load(imageUrl).into(mainCard)
-
-                setPlayerCard(R.id.player_card_5, R.drawable.player1)
-                setPlayerCard(R.id.player_card_2, R.drawable.player2)
-                setPlayerCard(R.id.player_card_3, R.drawable.player3)
-                setPlayerCard(R.id.player_card_4, R.drawable.player4)
-                setPlayerCard(R.id.player_card_5, R.drawable.player5)
             }
         }.start()
     }
 
-    fun setPlayerCard(imageViewId: Int, cardId: Int) {
+    fun setPlayerCards() {
+        Thread {
+            var session = "86c6d965d07a7b4e3023f4dc65e31856318e309073c6e80d7d1cdef74f1d8b40"
+            var game = "bigapple"
+
+            var client = OkHttpClient.Builder().build()
+            var url = "https://pomme.us:32123/game/join"
+
+            var bodyBuilder = FormBody.Builder()
+                .add("session", session)
+                .add("game", game)
+
+            var body = bodyBuilder.build()
+
+            var request = Request.Builder().url(url).post(body).build()
+            var response = client.newCall(request).execute()
+            var text = response.body?.string() ?: "error"
+
+            val obj = JSONObject(text)
+            var cards = obj.getJSONArray("cards")
+            var imageViewIds = intArrayOf(
+                R.id.player_card_1,
+                R.id.player_card_2,
+                R.id.player_card_3,
+                R.id.player_card_4,
+                R.id.player_card_5,
+            )
+            for (i in 0.. (cards.length() - 1)) {
+                var card = cards.getString(i)
+                var imageViewId = imageViewIds[i]
+
+                var imageUrl = "https://pomme.us/img/player/" + card
+
+                runOnUiThread {
+                    setPlayerCard(imageViewId, imageUrl)
+                }
+            }
+        }.start()
+    }
+
+    fun setPlayerCard(imageViewId: Int, cardUrl: String) {
         val card: ImageView = findViewById(imageViewId)
-        Glide.with(this).load(cardId).into(card)
+        Glide.with(this).load(cardUrl).into(card)
 
         var initialX = card.x
 
